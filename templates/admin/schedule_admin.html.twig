@@ -1,0 +1,54 @@
+{# templates/admin/custom_view.html.twig #}
+
+{% extends '@SonataAdmin/standard_layout.html.twig' %}
+
+
+{% block sonata_admin_content %}
+    <div class="box box-primary">
+        <div class="box-body">
+            <div class="col-lg-6">
+                {% for day in week %}
+                <h3>{{ day }}</h3>
+                <div class="row">
+                    <div style="display: inline-block">
+                        <span class="day-label">Choose start time</span>
+                        <div class="form-group">
+                            <div class='input-group date time-picker'>
+                                <input type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-time"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: inline-block">
+                        <span class="day-label">Choose end time</span>
+                        <div class="form-group">
+                            <div class='input-group date time-picker'>
+                                <input type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-time"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div>
+                        <div class="funkyradio-default">
+                            <input type="checkbox" name="checkbox" id="checkbox{{ day }}"/>
+                            <label for="checkbox{{ day }}">Day off</label>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <script type="text/javascript">
+                $(function () {
+                    $('.time-picker').datetimepicker({
+                        format: 'LT'
+                    });
+                });
+            </script>
+            <div style="display: none">{{ form(form) }}</div>
+        </div>
+    </div>
+{% endblock %}

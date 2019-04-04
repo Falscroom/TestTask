@@ -1,0 +1,12 @@
+fos_user:
+    db_driver:      orm # can be orm or odm
+    firewall_name:  main
+    user_class:     App\Application\Sonata\UserBundle\Entity\User     #Default configuration
+    from_email:
+        address: "vincent@vfac.fr"
+        sender_name: "vincent@vfac.fr"
+    group:
+        group_class:   App\Application\Sonata\UserBundle\Entity\Group
+        group_manager: sonata.user.orm.group_manager
+    service:
+        user_manager: sonata.user.orm.user_manager
