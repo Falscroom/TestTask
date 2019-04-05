@@ -20,12 +20,9 @@ class ScheduleAdmiController extends CRUDController
     {
         $show_success_message = false;
         $days = $this->getDoctrine()->getRepository(Schedule::class)->getDays();
+        $days = $days ? $days : NULL; // If database empty
         $week = new WeekForm();
-        $week = $week->buildForm($this->createFormBuilder());
-        if($days)
-            foreach([ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $key => $value) {
-                $week[$value]->setData($days[$key]);
-            }
+        $week = $week->buildForm($this->createFormBuilder(),$days);
         $week->handleRequest($this->getRequest());
         if ($week->isSubmitted() && $week->isValid()) {
             $data = $week->getData();
