@@ -17,7 +17,7 @@ class Schedule
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $day;
 
@@ -31,17 +31,22 @@ class Schedule
      */
     private $end;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $IsDayOff;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDay(): ?int
+    public function getDay(): ?string
     {
         return $this->day;
     }
 
-    public function setDay(int $day): self
+    public function setDay(string $day): self
     {
         $this->day = $day;
 
@@ -68,6 +73,18 @@ class Schedule
     public function setEnd(?\DateTimeInterface $end): self
     {
         $this->end = $end;
+
+        return $this;
+    }
+
+    public function getIsDayOff(): ?bool
+    {
+        return $this->IsDayOff;
+    }
+
+    public function setIsDayOff(bool $IsDayOff): self
+    {
+        $this->IsDayOff = $IsDayOff;
 
         return $this;
     }

@@ -47,4 +47,8 @@ class ScheduleRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getDays() {
+        $em = $this->getEntityManager();
+        return $em->createQuery('SELECT p FROM App\Entity\Schedule p')->setMaxResults(7)->getResult();
+    }
 }

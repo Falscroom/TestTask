@@ -18,14 +18,18 @@ class WeekForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options = null)
     {
+        $options = null;
         return $builder
-            ->add('sun', DayType::class )
-            ->add('mon', DayType::class )
-            ->add('tue', DayType::class )
-            ->add('wed', DayType::class )
-            ->add('thu', DayType::class )
-            ->add('fri', DayType::class )
-            ->add('sat', DayType::class )
-            ->add('save', SubmitType::class)->getForm();
+            ->add('Sunday', DayType::class ,array(
+                'required' => false
+            ))
+            ->add('Monday', DayType::class )
+            ->add('Tuesday', DayType::class )
+            ->add('Wednesday', DayType::class )
+            ->add('Thursday', DayType::class )
+            ->add('Friday', DayType::class )
+            ->add('Saturday', DayType::class )
+            ->add('save', SubmitType::class)
+            ->getForm();
     }
 }

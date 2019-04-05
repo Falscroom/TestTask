@@ -10,17 +10,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Schedule;
 use Sonata\AdminBundle\Controller\CRUDController;
-use Symfony\Component\HttpFoundation\Request;
 use App\Form\WeekForm;
 
 class ScheduleAdmiController extends CRUDController
 {
     public function listAction()
     {
+        $show_success_message = false;
+        $days = $this->getDoctrine()->getRepository(Schedule::class)->getDays();
         $week = new WeekForm();
         $week = $week->buildForm($this->createFormBuilder());
-
+        if($days)
+            foreach([ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $key => $value) {
+                $week[$value]->setData($days[$key]);
+            }
         $week->handleRequest($this->getRequest());
         if ($week->isSubmitted() && $week->isValid()) {
             $data = $week->getData();
@@ -29,12 +34,10 @@ class ScheduleAdmiController extends CRUDController
                 $em->persist($day);
             }
             $em->flush();
+            $show_success_message = true;
         }
-
-
         return $this->renderWithExtraParams('admin/schedule_admin.html.twig', [
-            'form' => $week->createView(),
-            'week' => ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            'form' => $week->createView(), 'show_success_message' => $show_success_message
         ]);
 
 
