@@ -34,3 +34,11 @@ services:
             - App\Controller\ScheduleAdmiController
         tags:
             - { name: sonata.admin, manager_type: orm, group: 'Tables Admin', label: Schedule }
+    app.admin.exceptions_admin:
+        class: App\Admin\ExceptionDayAdmin
+        arguments:
+            - ~
+            - App\Entity\ExceptionDay
+            - App\Controller\ExceptionDayAdminController
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: 'Tables Admin', label: 'Exception day' }
