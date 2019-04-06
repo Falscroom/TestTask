@@ -6,6 +6,11 @@
 {% block sonata_admin_content %}
     <div class="box box-primary">
         <div class="box-body">
+            {% if show_success_message == true %}
+            <div class="alert alert-success" role="alert">
+                Schedule updated!
+            </div>
+            {% endif %}
             <div class="col-lg-6">
                 {{ form_start(form) }}
                     {% include 'admin/form_day.html.twig' with {'form': form.Sunday, 'day' : 'Sunday'} %}
