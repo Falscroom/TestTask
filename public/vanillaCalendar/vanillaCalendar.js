@@ -9,6 +9,18 @@ var vanillaCalendar = {
     init: function(t) {
         this.options = t, this.date.setDate(1), this.createWeek(), this.createMonth(), this.createListeners()
     },
+    dateFormat: function(date) {
+        let yyyy = date.getFullYear().toString();
+        let mm = (date.getMonth()+1).toString();
+        let dd  = date.getDate().toString();
+
+        if(mm.length === 1)
+            mm = '0' + mm;
+        if(dd.length === 1)
+            dd = '0' + dd;
+
+        return yyyy + '/' + mm + '/' + dd;
+    },
     createListeners: function() {
         var t = this;
         this.next.addEventListener("click", function() {
@@ -26,7 +38,7 @@ var vanillaCalendar = {
             n = document.createElement("span"),
             i = this.options.sundayFirst ? e : e - 1,
             r = this.options.rtl ? "marginRight" : "marginLeft";
-        n.innerHTML = t, s.className = "vcal-date", s.setAttribute("data-calendar-date", this.date), 1 === t && (0 === e ? this.options.sundayFirst || (s.style[r] = 6 * 14.28 + "%") : s.style[r] = 14.28 * i + "%"), this.options.disablePastDays && this.date.getTime() <= this.todaysDate.getTime() - 1 ? s.classList.add("vcal-date--disabled") : (s.classList.add("vcal-date--active"), s.setAttribute("data-calendar-status", "active")), this.date.toString() === this.todaysDate.toString() && s.classList.add("vcal-date--today"), s.appendChild(n), this.month.appendChild(s)
+        n.innerHTML = t, s.className = "vcal-date", s.setAttribute("data-calendar-date", this.dateFormat(this.date) ), 1 === t && (0 === e ? this.options.sundayFirst || (s.style[r] = 6 * 14.28 + "%") : s.style[r] = 14.28 * i + "%"), this.options.disablePastDays && this.date.getTime() <= this.todaysDate.getTime() - 1 ? s.classList.add("vcal-date--disabled") : (s.classList.add("vcal-date--active"), s.setAttribute("data-calendar-status", "active")), this.date.toString() === this.todaysDate.toString() && s.classList.add("vcal-date--today"), s.appendChild(n), this.month.appendChild(s)
     },
     createWeek: function() {
         var t = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],

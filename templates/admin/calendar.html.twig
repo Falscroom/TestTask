@@ -17,12 +17,9 @@
                             <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path>
                         </svg>
                     </button>
-
                     <div class="vcal-header__label" data-calendar-label="month">
                         March 2017
                     </div>
-
-
                     <button class="vcal-btn" data-calendar-toggle="next">
                         <svg height="24" version="1.1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path>
@@ -33,15 +30,56 @@
                 </div>
                 <div class="vcal-body" data-calendar-area="month"></div>
             </div>
+
+
+            <div class="col-lg-6">
+                <div class="row">
+                    {{ form_start(form) }}
+                    <div>
+                        <span class="day-label">Choose start time</span>
+                        <div class="form-group">
+                            <div style="display: none;">{{ form_widget(form.date) }}</div>
+                            <div class='input-group date time-picker'>
+                                {{ form_widget(form.start, { 'attr': {'class': 'form-control day-time'} }) }}
+                                <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="day-label">Choose end time</span>
+                        <div class="form-group">
+                            <div class='input-group date time-picker'>
+                                {{ form_widget(form.end, { 'attr': {'class': 'form-control day-time'} }) }}
+                                <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="funkyradio-default">
+                            {{ form_widget(form.IsDayOff, { 'attr': {'class': 'checkbox'} }) }}
+                            <label for="checkbox">Day off</label>
+                        </div>
+                    </div>
+
+                    <div style="display: none">
+                        {{ form_widget(form.range_start, { 'attr': {'class': 'range'} }) }}
+                        {{ form_widget(form.range_end, { 'attr': {'class': 'range'} }) }}
+                    </div>
+                    {{ form_widget(form.save, { 'attr': {'class': 'btn btn-default', 'style' : 'width: 200px; margin-top: 10px;'} }) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+
         </div>
     </div>
     <script src="{{ asset('/vanillaCalendar/vanillaCalendar.js') }}"></script>
     <script>
-        window.addEventListener('load', function () {
-            vanillaCalendar.init({
-                sundayFirst: true,
-            });
-
+        function addListeners() {
             $('.vcal-date').click(function ($e) {
                 $(this).hasClass('vcal-date--selected') ? $(this).removeClass('vcal-date--selected') : $(this).addClass('vcal-date--selected');
 
@@ -51,9 +89,32 @@
                 if(el.length > 2)
                     el.removeClass('vcal-date--selected');
             });
-
-
+        }
+        window.addEventListener('load', function () {
+            vanillaCalendar.init({
+                sundayFirst: true,
+            });
+            $(function () {
+                $('.day-time').datetimepicker({
+                    format: 'HH:mm',
+                });
+            });
+            $('.vcal-btn').click( function ($e) {
+                addListeners();
+            });
+            addListeners();
         });
-
+        $('#form_save').click( function ($e) {
+            let el = $('.vcal-date--selected');
+            if(el.length >= 1) {
+                let inputs = $('.range');
+                inputs.eq(0).val(
+                    el.first().data('calendar-date')
+                );
+                inputs.eq(1).val(
+                    el.last().data('calendar-date')
+                );
+            }
+        });
     </script>
 {% endblock %}

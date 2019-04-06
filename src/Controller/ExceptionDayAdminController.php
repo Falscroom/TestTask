@@ -12,15 +12,29 @@ namespace App\Controller;
 
 use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\Request;
-use Sonata\AdminBundle\Admin\Pool;
+use App\Form\ExceptionDayForm;
 
 class ExceptionDayAdminController extends CRUDController
 {
-    public function createCalendarAction(Request $request, Pool $adminPool)
+    public function createCalendarAction(Request $request)
     {
-        $styles = $adminPool->getOption('stylesheets');
-        array_push ($styles , 'test.css' ) ;
+        $day = new ExceptionDayForm();
+        $day = $day->buildForm($this->createFormBuilder());
 
-        return $this->renderWithExtraParams('admin/calendar.html.twig');
+        $day->handleRequest($this->getRequest());
+
+
+        if ($day->isSubmitted() && $day->isValid()) {
+/*            var_dump($day);
+            $data = $day->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($data);
+            $em->flush();*/
+            $data = $day->getData();
+        }
+
+        return $this->renderWithExtraParams('admin/calendar.html.twig',[
+            'form' => $day->createView()
+        ]);
     }
 }
