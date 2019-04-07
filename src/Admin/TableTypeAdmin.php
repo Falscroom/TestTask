@@ -23,6 +23,8 @@ final class TableTypeAdmin extends AbstractAdmin
     }
     protected function configureListFields(ListMapper $listMapper)
     {
+        $listMapper
+            ->add('type');
     }
 
 }

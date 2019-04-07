@@ -13,30 +13,46 @@ namespace App\Controller;
 use App\Entity\ExceptionDay;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\Request;
-use App\Form\ExceptionDayForm;
+use App\Form\ExceptionDayType;
 
 class ExceptionDayAdminController extends CRUDController
 {
     public function createCalendarAction(Request $request)
     {
-        $day = new ExceptionDayForm();
+        $day = new ExceptionDayType();
         $day = $day->buildForm($this->createFormBuilder());
+        $repository = $this->getDoctrine()->getRepository(ExceptionDay::class);
 
         $day->handleRequest($this->getRequest());
 
 
         if ($day->isSubmitted() && $day->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $data = $day->getData();
             $interval = new \DateInterval('P1D');
             $period = new \DatePeriod($data['range_start'],$interval,$data['range_end']);
+
+            $existing_days = $repository->getBetween($data['range_start'],$data['range_end']);
+            $existing_days = $repository->datesAsKeys($existing_days);
+
             foreach ($period as $date) {
-                $exceptionDay = new ExceptionDay($date,$data['start'],$data['end'],$data['IsDayOff']);
+                if(isset($existing_days[$date->format('Y-m-d')])) {
+                    $exceptionDay = $existing_days[$date->format('Y-m-d')]->setAll($date,$data['start'],$data['end'],$data['IsDayOff']);
+                } else {
+                    $exceptionDay = new ExceptionDay();
+                    $exceptionDay->setAll($date,$data['start'],$data['end'],$data['IsDayOff']);
+                }
                 $em->persist($exceptionDay);
             }
-            $exceptionDay = new ExceptionDay($data['range_end'],$data['start'],$data['end'],$data['IsDayOff']);
+            if(isset($existing_days[$data['range_end']->format('Y-m-d')])) {
+                $exceptionDay = $existing_days[$data['range_end']->format('Y-m-d')]->setAll($data['range_end'],$data['start'],$data['end'],$data['IsDayOff']);
+            } else {
+                $exceptionDay = new ExceptionDay();
+                $exceptionDay->setAll($data['range_end'],$data['start'],$data['end'],$data['IsDayOff']);
+            }
             $em->persist($exceptionDay);
-            $em->flush();
+              $em->flush();
 
         }
 

@@ -40,8 +40,12 @@ final class ExceptionDayAdmin extends AbstractAdmin
     {
         $listMapper
             ->addIdentifier('date')
-            ->addIdentifier('start')
-            ->addIdentifier('end')
+            ->addIdentifier('start',null, array(
+                'label' => 'Start time' ))
+            ->addIdentifier('end', null, array(
+                'label' => 'Time of the end' ))
+            ->addIdentifier('isDayOff', null, array(
+                'label' => 'Is it day off?' ))
 /*            ->addIdentifier('end')->add('_action', null, [
                 'actions' => [
                     'show' => [],

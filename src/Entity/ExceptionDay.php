@@ -35,15 +35,14 @@ class ExceptionDay
      * @ORM\Column(type="boolean")
      */
     private $isDayOff;
-
-    public function __construct($date,$start,$end,$isDayOff)
-    {
+    public function setAll($date,$start,$end,$isDayOff) {
         $this->setDate($date);
         $this->setStart($start);
         $this->setEnd($end);
         $this->setIsDayOff($isDayOff);
-    }
 
+        return $this;
+    }
     public function getId(): ?int
     {
         return $this->id;

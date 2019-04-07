@@ -29,8 +29,8 @@ final class DeskAdmin extends AbstractAdmin
         protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('id')
-            ->add('type.type');
+            ->add('type.type' , null , array(
+                'label' => 'Table type' ));
     }
 
 }

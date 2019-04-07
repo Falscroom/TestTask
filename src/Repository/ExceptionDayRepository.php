@@ -19,32 +19,16 @@ class ExceptionDayRepository extends ServiceEntityRepository
         parent::__construct($registry, ExceptionDay::class);
     }
 
-    // /**
-    //  * @return ExceptionDay[] Returns an array of ExceptionDay objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function getBetween($date_start,$date_end) {
+        $em = $this->getEntityManager();
+        return $em->createQuery('SELECT e FROM App\Entity\ExceptionDay e WHERE e.date BETWEEN :date_start AND :date_end')
+            ->setParameter('date_start', $date_start)->setParameter(':date_end', $date_end)->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?ExceptionDay
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+    public function datesAsKeys($dates) {
+        $result = [];
+        foreach ($dates as $key => $day) {
+            $result[$day->getDate()->format('Y-m-d')] = $day;
+        }
+        return $result;
     }
-    */
 }
