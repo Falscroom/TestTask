@@ -36,6 +36,14 @@ class ExceptionDay
      */
     private $isDayOff;
 
+    public function __construct($date,$start,$end,$isDayOff)
+    {
+        $this->setDate($date);
+        $this->setStart($start);
+        $this->setEnd($end);
+        $this->setIsDayOff($isDayOff);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

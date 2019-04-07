@@ -27,27 +27,14 @@ class ExceptionDayAdminController extends CRUDController
 
         if ($day->isSubmitted() && $day->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            /*            var_dump($day);
-            $data = $day->getData();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($data);
-            $em->flush();*/
             $data = $day->getData();
             $interval = new \DateInterval('P1D');
             $period = new \DatePeriod($data['range_start'],$interval,$data['range_end']);
             foreach ($period as $date) {
-                $exceptionDay = new ExceptionDay();
-                $exceptionDay->setDate($date);
-                $exceptionDay->setStart($data['start']);
-                $exceptionDay->setEnd($data['end']);
-                $exceptionDay->setIsDayOff($data['IsDayOff']);
+                $exceptionDay = new ExceptionDay($date,$data['start'],$data['end'],$data['IsDayOff']);
                 $em->persist($exceptionDay);
             }
-            $exceptionDay = new ExceptionDay();
-            $exceptionDay->setDate($data['range_end']);
-            $exceptionDay->setStart($data['start']);
-            $exceptionDay->setEnd($data['end']);
-            $exceptionDay->setIsDayOff($data['IsDayOff']);
+            $exceptionDay = new ExceptionDay($data['range_end'],$data['start'],$data['end'],$data['IsDayOff']);
             $em->persist($exceptionDay);
             $em->flush();
 
