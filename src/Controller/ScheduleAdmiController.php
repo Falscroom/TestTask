@@ -12,7 +12,7 @@ namespace App\Controller;
 
 use App\Entity\Schedule;
 use Sonata\AdminBundle\Controller\CRUDController;
-use App\Form\WeekForm;
+use App\Form\WeekType;
 
 class ScheduleAdmiController extends CRUDController
 {
@@ -21,7 +21,7 @@ class ScheduleAdmiController extends CRUDController
         $show_success_message = false;
         $days = $this->getDoctrine()->getRepository(Schedule::class)->getDays();
         $days = $days ? $days : NULL; // If database empty
-        $week = new WeekForm();
+        $week = new WeekType();
         $week = $week->buildForm($this->createFormBuilder(),$days);
         $week->handleRequest($this->getRequest());
         if ($week->isSubmitted() && $week->isValid()) {

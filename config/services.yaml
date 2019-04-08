@@ -42,3 +42,18 @@ services:
             - App\Controller\ExceptionDayAdminController
         tags:
             - { name: sonata.admin, manager_type: orm, group: 'Tables Admin', label: 'Exception day' }
+    app.admin.desk_admin:
+        class: App\Admin\DeskAdmin
+        arguments: [~, App\Entity\Desk, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: 'Tables Admin', label: 'Table' }
+    app.admin.table_type_admin:
+        class: App\Admin\TableTypeAdmin
+        arguments: [~, App\Entity\TableType, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: 'Tables Admin', label: 'Table type' }
+    app.admin.reservation_admin:
+        class: App\Admin\ReservationAdmin
+        arguments: [~, App\Entity\Reservation, App\Controller\ReservationAdminController]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: 'Tables Admin', label: 'Reservations' }

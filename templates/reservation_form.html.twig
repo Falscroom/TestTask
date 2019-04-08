@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+    {% block stylesheets %}
+        {{ parent() }}
+        <link type="text/css" rel="stylesheet" href="{{ asset('/css/reservation_form.css') }}">
+    {% endblock %}
+
+    {% block body %}
+
+    <div class="container">
+        <div class="logo">
+            <img src="{{ asset('/images/logo.svg') }}">
+        </div>
+        <div class="form-container">
+            <h1>Table Reservation</h1>
+            <div class="row">
+                <div class="col s12">
+                    {{ form_start(form) }}
+                    <h3>Contacts</h3>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            {{ form_widget(form.name, { 'attr': {'id': 'name'} }) }}
+                            <label for="reservation_name">Name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            {{ form_widget(form.number, { 'attr': {'id': 'number'} }) }}
+                            <label for="reservation_number">Tel. number</label>
+                        </div>
+                    </div>
+
+                    <h3>Table</h3>
+                    <div class="row">
+                        <div class="input-field col s12 m8 l8">
+                            {{ form_widget(form.desk, { 'attr': {'id': 'table'} }) }}
+                            <label for="table">Type</label>
+                        </div>
+                        <div class="input-field col s12 m4 l4">
+                            {{ form_widget(form.duration, { 'attr': {'id': 'duration'} }) }}
+                            <label for="reservation_duration">Duration</label>
+                        </div>
+                    </div>
+
+                    <h3>Time</h3>
+                    <div class="row">
+                        <div class="input-field col s12 m8 l8">
+                            {{ form_widget(form.date, { 'attr': {'id': 'date', 'class' : 'datepicker'} }) }}
+                            <label for="reservation_date">Date</label>
+                        </div>
+                        <div class="input-field col s12 m4 l4">
+                            {{ form_widget(form.time, { 'attr': {'id': 'time', 'class' : 'timepicker'} }) }}
+                            <label for="reservation_time">Time</label>
+                        </div>
+                    </div>
+                    <div class="col s8 offset-s2 m8 offset-m2 l8 offset-l2">
+                        {{ form_widget(form.reserve, { 'attr': {'class' : 'waves-effect waves-light btn-large amber darken-4'} }) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+        {% block javascripts %}
+            {{ parent() }}
+            <script>
+                $(document).ready(function(){
+                    $('.datepicker').datepicker({
+                        'autoClose' : true,
+                        'format' : 'yyyy/mm/dd'
+                    });
+                    $('select').formSelect();
+                    $('.timepicker').timepicker({
+                        'autoClose' : true,
+                        'twelveHour' : false
+                    });
+                    $('.timepicker').change(function () { //TODO 24 00
+                        let time = $(this).val().split(':');
+                        time[1] = Math.round(time[1] / 30) * 30;
+                        if(time[1] === 60) {
+                            time[0]++;
+                            time[1] = 0;
+                        }
+                        $(this).val(
+                            time[0] + ':' + (time[1] === 0 ? '00' : time[1])
+                        );
+                    })
+                });
+            </script>
+        {% endblock %}

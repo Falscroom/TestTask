@@ -31,4 +31,13 @@ class ExceptionDayRepository extends ServiceEntityRepository
         }
         return $result;
     }
+
+    public function findOneByDate($date): ?ExceptionDay
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.date = :val')
+            ->setParameter('val', $date)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

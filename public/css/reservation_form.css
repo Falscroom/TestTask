@@ -1,0 +1,45 @@
+body {
+    font-family: Roboto, sans-serif;
+    background-image: url('/images/alcohol-bar-beer-941864.jpg');
+}
+h1,h2,h3 {
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #464646;
+}
+h1 {
+    font-size: 36px;
+}
+h3 {
+    font-size: 20px;
+}
+.form-container {
+    padding: 10px 100px 10px 100px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+.logo {
+    width: 100%;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.btn-large {
+    width: 100%;
+}
+
+@media (min-width: 1199.98px) {
+    .container {
+        width: 700px;
+    }
+}
+@media (max-width: 991.98px) {
+
+    .form-container {
+        padding: 10px;
+    }
+}

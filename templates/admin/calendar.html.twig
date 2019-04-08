@@ -30,38 +30,38 @@
                 </div>
                 <div class="vcal-body" data-calendar-area="month"></div>
             </div>
-
-
             <div class="col-lg-6">
                 <div class="row">
                     {{ form_start(form) }}
-                    <div>
-                        <span class="day-label">Choose start time</span>
-                        <div class="form-group">
-                            <div style="display: none;">{{ form_widget(form.date) }}</div>
-                            <div class='input-group date time-picker'>
-                                {{ form_widget(form.start, { 'attr': {'class': 'form-control day-time'} }) }}
-                                <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-time"></span>
-                    </span>
+                    <div class="day-container">
+                        <div>
+                            <span class="day-label">Choose start time</span>
+                            <div class="form-group">
+                                <div style="display: none;">{{ form_widget(form.date) }}</div>
+                                <div class='input-group date time-picker'>
+                                    {{ form_widget(form.start, { 'attr': {'class': 'form-control day-time'} }) }}
+                                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <span class="day-label">Choose end time</span>
-                        <div class="form-group">
-                            <div class='input-group date time-picker'>
-                                {{ form_widget(form.end, { 'attr': {'class': 'form-control day-time'} }) }}
-                                <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-time"></span>
-                    </span>
+                        <div>
+                            <span class="day-label">Choose end time</span>
+                            <div class="form-group">
+                                <div class='input-group date time-picker'>
+                                    {{ form_widget(form.end, { 'attr': {'class': 'form-control day-time'} }) }}
+                                    <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <div class="funkyradio-default">
-                            {{ form_widget(form.IsDayOff, { 'attr': {'class': 'checkbox'} }) }}
-                            <label for="checkbox">Day off</label>
+                        <div>
+                            <div class="funkyradio-default">
+                                {{ form_widget(form.IsDayOff, { 'attr': {'class': 'checkbox'} }) }}
+                                <label for="checkbox">Day off</label>
+                            </div>
                         </div>
                     </div>
 
@@ -73,8 +73,6 @@
                     {{ form_end(form) }}
                 </div>
             </div>
-
-
         </div>
     </div>
     <script src="{{ asset('/vanillaCalendar/vanillaCalendar.js') }}"></script>
@@ -90,7 +88,7 @@
                     el.removeClass('vcal-date--selected');
             });
         }
-        window.addEventListener('load', function () {
+        $(document).ready( function () {
             vanillaCalendar.init({
                 sundayFirst: true,
             });
@@ -101,6 +99,12 @@
             });
             $('.vcal-btn').click( function ($e) {
                 addListeners();
+            });
+            $('.icheckbox_square-blue').on('change',function ($e) {
+                if($(this).hasClass('checked'))
+                    $(this).parents('.day-container').find('.day-time').attr("disabled", false);
+                else
+                    $(this).parents('.day-container').find('.day-time').attr("disabled", true);
             });
             addListeners();
         });
