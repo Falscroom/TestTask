@@ -34,6 +34,7 @@ class ExceptionDayAdminController extends CRUDController
             $interval = new \DateInterval('P1D');
             $period = new \DatePeriod($data['range_start'],$interval,$data['range_end']);
 
+            /*Стараемся найти существующие обьекты, чобы не добавлять кучу значений в БД */
             $existing_days = $repository->getBetween($data['range_start'],$data['range_end']);
             $existing_days = $repository->datesAsKeys($existing_days);
 

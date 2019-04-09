@@ -36,28 +36,29 @@ class ReservationController  extends AbstractController
             $reservation = $day->getData();
             $entityManager = $this->getDoctrine()->getManager();
             $reservation->setApproved(false);
+            /* Считем время окончания брони */
             $endTime = new \DateTime($reservation->getTime()->format('Y-m-d H:i'));
             $reservation->setEndTime(
                 $endTime->add(new \DateInterval('PT' . $reservation->getDuration()))
             );
-            $entityManager->persist($reservation);
 
+            /*Проверяем существуют ли брони на этот столик в данный день и время*/
             $already_reserved = $this->getDoctrine()->getRepository(Reservation::class)->ifReserved(
                 $reservation->getTime()->format('H:i:s'),$endTime->format('H:i:s'),$reservation->getDate()->format('Y-m-d'),$reservation->getDesk());
 
-
-
-
+            /*Определяем график работы*/
             $working_day = $this->getDoctrine()->getRepository(Schedule::class)->getDayByNumDay(
                 date('w',$reservation->getDate()->getTimestamp())
             );
             $exception_day = $this->getDoctrine()->getRepository(ExceptionDay::class)->findOneByDate( $reservation->getDate()->format('Y-m-d') );
 
+            /*Если существует день исключение используем его*/
             $working_day = $exception_day ? $exception_day : $working_day;
 
             if($reservation->getTime() >= $working_day->getStart() &&  $reservation->getEndTime() <= $working_day->getEnd() && (!$working_day->getIsDayOff())) {
                 if (count($already_reserved) === 0) {
-                    /*$entityManager->flush();*/
+                    $entityManager->persist($reservation);
+                    $entityManager->flush();
                     return $this->render('reservation_success_form.html.twig');
                 } else {
                     $custom_errors[] = ['message' => 'Sorry, but this time is already reserved'];

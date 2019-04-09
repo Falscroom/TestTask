@@ -19,6 +19,7 @@ class ReservationAdminController extends CRUDController
 {
     public function approveAction($id)
     {
+        /*Логика кнопки approve в списке броней*/
         $reservation = $this->getDoctrine()->getRepository(Reservation::class)->findOneById($id);
         $reservation->setApproved(true);
         $em = $this->getDoctrine()->getManager();

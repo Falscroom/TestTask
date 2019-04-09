@@ -21,10 +21,12 @@ class ScheduleAdmiController extends CRUDController
         $week_arr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         $show_success_message = false;
         $days_repository = $this->getDoctrine()->getRepository(Schedule::class);
+        /* Получаем старое расписание */
         $days = $days_repository->getDays();
         if(count($days) !== 7)
             $days_repository->destroyEverything();
-        $days = count($days) == 7 ? $days : NULL; // If database empty or corrupted
+        /*Если с базой данных что то не правильно, то все стирается и расписание на 7 дней создается заново */
+        $days = count($days) == 7 ? $days : NULL;
         $week = new WeekType();
         $week = $week->buildForm($this->createFormBuilder(),$days);
         $week->handleRequest($this->getRequest());
