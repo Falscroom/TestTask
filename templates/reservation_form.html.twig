@@ -53,6 +53,11 @@
                             <label for="reservation_time">Time</label>
                         </div>
                     </div>
+                    {% for error in errors %}
+                        <div class="error">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
                     <div class="col s8 offset-s2 m8 offset-m2 l8 offset-l2">
                         {{ form_widget(form.reserve, { 'attr': {'class' : 'waves-effect waves-light btn-large amber darken-4'} }) }}
                     </div>

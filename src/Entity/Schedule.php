@@ -36,6 +36,11 @@ class Schedule
      */
     private $IsDayOff;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $numDay;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +90,18 @@ class Schedule
     public function setIsDayOff(bool $IsDayOff): self
     {
         $this->IsDayOff = $IsDayOff;
+
+        return $this;
+    }
+
+    public function getNumDay(): ?int
+    {
+        return $this->numDay;
+    }
+
+    public function setNumDay(int $numDay): self
+    {
+        $this->numDay = $numDay;
 
         return $this;
     }

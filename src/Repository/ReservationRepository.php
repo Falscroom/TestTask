@@ -19,40 +19,26 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
-    // /**
-    //  * @return Reservation[] Returns an array of Reservation objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function ifReserved($start,$end,$date,$desk) //TODO  createQueryBuilder
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+            $em = $this->getEntityManager();
+            return $em->createQuery('SELECT r FROM App\Entity\Reservation r 
+                WHERE :start > r.time AND :start < r.endTime AND :date = r.date AND r.Desk = :desk 
+                OR :end > r.time AND :end < r.endTime AND :date = r.date AND r.Desk = :desk
+                OR :start = r.time AND :end = r.endTime AND :date = r.date AND r.Desk = :desk')
+                ->setParameter('start', $start)
+                ->setParameter('end',$end)
+                ->setParameter('date',$date)
+                ->setParameter('desk',$desk)
+                ->getArrayResult();
 
-    /*
-    public function findOneBySomeField($value): ?Reservation
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
     }
-    */
     public function findOneById($id): ?Reservation
     {
         return $this->createQueryBuilder('r')
             ->andWhere('r.id = :val')
             ->setParameter('val', $id)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 }

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Schedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * @method Schedule|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,37 +19,29 @@ class ScheduleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Schedule::class);
     }
-
-    // /**
-    //  * @return Schedule[] Returns an array of Schedule objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Schedule
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
     public function getDays() {
         $em = $this->getEntityManager();
         return $em->createQuery('SELECT p FROM App\Entity\Schedule p')->setMaxResults(7)->getResult();
+    }
+    public function getDayByNumDay($num): ? Schedule
+    {
+        try {
+            return $this->createQueryBuilder('s')
+                ->andWhere('s.numDay = :num')
+                ->setParameter('num', $num)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+
+
+        /*createQuery('SELECT p FROM App\Entity\Schedule p WHERE p.numDay = :num')->setParameter('num',$num )->getResult();*/
+    }
+    public function destroyEverything() {
+        return $this->createQueryBuilder('s')
+            ->delete()
+            ->getQuery()
+            ->getResult();
     }
 }

@@ -18,9 +18,13 @@ class ScheduleAdmiController extends CRUDController
 {
     public function listAction()
     {
+        $week_arr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         $show_success_message = false;
-        $days = $this->getDoctrine()->getRepository(Schedule::class)->getDays();
-        $days = $days ? $days : NULL; // If database empty
+        $days_repository = $this->getDoctrine()->getRepository(Schedule::class);
+        $days = $days_repository->getDays();
+        if(count($days) !== 7)
+            $days_repository->destroyEverything();
+        $days = count($days) == 7 ? $days : NULL; // If database empty or corrupted
         $week = new WeekType();
         $week = $week->buildForm($this->createFormBuilder(),$days);
         $week->handleRequest($this->getRequest());
@@ -28,6 +32,7 @@ class ScheduleAdmiController extends CRUDController
             $data = $week->getData();
             $em = $this->getDoctrine()->getManager();
             foreach ($data as $day) {
+                $day->setNumDay(array_search($day->getDay() ,$week_arr));
                 $em->persist($day);
             }
             $em->flush();

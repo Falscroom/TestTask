@@ -11,6 +11,7 @@ namespace App\Controller;
 
 use App\Entity\ExceptionDay;
 use App\Entity\Reservation;
+use App\Entity\Schedule;
 use App\Form\ReservationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,19 +24,10 @@ class ReservationController  extends AbstractController
      */
     public function main(Request $request)
     {
-
-
-/*        $test = $this->getDoctrine()->getRepository(ExceptionDay::class)->findOneByDate( (new \DateTime())->format('Y-m-d') );
-        var_dump($test);*/
-
-/*        $dt = new \DateTime();
-        var_dump($dt);
-        $dt->add(new \DateInterval('PT25M'));
-        var_dump($dt);*/
+        $errors = [];
 
         $reservation = new Reservation();
         $day = $this->createForm(ReservationType::class, $reservation);
-
         $day->handleRequest($request);
 
         if ($day->isSubmitted() && $day->isValid()) {
@@ -48,13 +40,31 @@ class ReservationController  extends AbstractController
                 $endTime->add(new \DateInterval('PT' . $reservation->getDuration()))
             );
             $entityManager->persist($reservation);
-            $entityManager->flush();
+
+            $already_reserved = $this->getDoctrine()->getRepository(Reservation::class)->ifReserved(
+                $reservation->getTime()->format('H:i:s'),$endTime->format('H:i:s'),$reservation->getDate()->format('Y-m-d'),$reservation->getDesk());
+
+            $working_day = $this->getDoctrine()->getRepository(Schedule::class)->getDayByNumDay($reservation->getDate()->format('N'));
+            $exception_day = $this->getDoctrine()->getRepository(ExceptionDay::class)->findOneByDate( $reservation->getDate()->format('Y-m-d') );
+
+            $working_day = $exception_day ? $exception_day : $working_day;
+            
+            if($reservation->getTime() >= $working_day->getStart() &&  $reservation->getEndTime() <= $working_day->getEnd() && (!$working_day->getIsDayOff())) {
+                if (count($already_reserved) === 0) {
+                    $entityManager->flush();
+                } else {
+                    $errors[] = 'Sorry, but this time already reserved';
+                }
+            } else {
+                $errors[] = 'Sorry we are not working at this time';
+            }
 
         }
         return $this->render(
             'reservation_form.html.twig' ,
             [
-                'form' => $day->createView()
+                'form' => $day->createView(),
+                'errors' => $errors
             ]
         );
     }

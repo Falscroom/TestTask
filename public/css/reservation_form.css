@@ -31,7 +31,11 @@ h3 {
 .btn-large {
     width: 100%;
 }
-
+.error {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px solid darkred; /* Параметры границы */
+}
 @media (min-width: 1199.98px) {
     .container {
         width: 700px;

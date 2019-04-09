@@ -47,7 +47,7 @@ class Reservation
     /**
      * @ORM\Column(type="time")
      */
-    private $end_time;
+    private $endTime;
 
     /**
      * @ORM\Column(type="boolean")
@@ -151,12 +151,12 @@ class Reservation
 
     public function getEndTime(): ?\DateTimeInterface
     {
-        return $this->end_time;
+        return $this->endTime;
     }
 
-    public function setEndTime(\DateTimeInterface $end_time): self
+    public function setEndTime(\DateTimeInterface $endTime): self
     {
-        $this->end_time = $end_time;
+        $this->endTime = $endTime;
 
         return $this;
     }

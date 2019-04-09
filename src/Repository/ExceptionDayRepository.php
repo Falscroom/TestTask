@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\ExceptionDay;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-
+use Doctrine\ORM\NonUniqueResultException;
 /**
  * @method ExceptionDay|null find($id, $lockMode = null, $lockVersion = null)
  * @method ExceptionDay|null findOneBy(array $criteria, array $orderBy = null)
@@ -19,12 +19,17 @@ class ExceptionDayRepository extends ServiceEntityRepository
         parent::__construct($registry, ExceptionDay::class);
     }
 
-    public function getBetween($date_start,$date_end) {
-        $em = $this->getEntityManager();
-        return $em->createQuery('SELECT e FROM App\Entity\ExceptionDay e WHERE e.date BETWEEN :date_start AND :date_end')
-            ->setParameter('date_start', $date_start)->setParameter(':date_end', $date_end)->getResult();
+    public function getBetween($date_start,$date_end)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.date BETWEEN :date AND :date_end')
+            ->setParameter('date', $date_start )
+            ->setParameter('date_end', $date_end )
+            ->getQuery()
+            ->getResult();
     }
-    public function datesAsKeys($dates) {
+    public function datesAsKeys($dates)
+    {
         $result = [];
         foreach ($dates as $key => $day) {
             $result[$day->getDate()->format('Y-m-d')] = $day;
@@ -34,10 +39,14 @@ class ExceptionDayRepository extends ServiceEntityRepository
 
     public function findOneByDate($date): ?ExceptionDay
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.date = :val')
-            ->setParameter('val', $date)
-            ->getQuery()
-            ->getOneOrNullResult();
+        try {
+            return $this->createQueryBuilder('e')
+                ->andWhere('e.date = :val')
+                ->setParameter('val', $date)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
     }
 }
