@@ -24,7 +24,7 @@ class ReservationController  extends AbstractController
      */
     public function main(Request $request, ValidatorInterface $validator)
     {
-        $custom_errors = [];
+        $custom_errors = []; $errors = [];
 
         $reservation = new Reservation();
         $day = $this->createForm(ReservationType::class, $reservation);
@@ -68,7 +68,8 @@ class ReservationController  extends AbstractController
 
         }
 
-        $errors = $validator->validate($reservation);
+        if($day->isSubmitted())
+            $errors = $validator->validate($reservation);
         return $this->render('reservation_form.html.twig' ,['form' => $day->createView(),'errors' => $errors, 'custom_errors' => $custom_errors]);
     }
 }
