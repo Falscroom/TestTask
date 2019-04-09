@@ -15,19 +15,21 @@ use App\Form\ReservationType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ReservationController  extends AbstractController
 {
     /**
      * @Route("/")
      */
-    public function main(Request $request)
+    public function main(Request $request, ValidatorInterface $validator)
     {
-        $errors = [];
+        $custom_errors = [];
 
         $reservation = new Reservation();
         $day = $this->createForm(ReservationType::class, $reservation);
         $day->handleRequest($request);
+
 
         if ($day->isSubmitted() && $day->isValid()) {
 
@@ -44,6 +46,8 @@ class ReservationController  extends AbstractController
                 $reservation->getTime()->format('H:i:s'),$endTime->format('H:i:s'),$reservation->getDate()->format('Y-m-d'),$reservation->getDesk());
 
 
+
+
             $working_day = $this->getDoctrine()->getRepository(Schedule::class)->getDayByNumDay(
                 date('w',$reservation->getDate()->getTimestamp())
             );
@@ -53,16 +57,18 @@ class ReservationController  extends AbstractController
 
             if($reservation->getTime() >= $working_day->getStart() &&  $reservation->getEndTime() <= $working_day->getEnd() && (!$working_day->getIsDayOff())) {
                 if (count($already_reserved) === 0) {
-                    $entityManager->flush();
+                    /*$entityManager->flush();*/
                     return $this->render('reservation_success_form.html.twig');
                 } else {
-                    $errors[] = 'Sorry, but this time already reserved';
+                    $custom_errors[] = ['message' => 'Sorry, but this time is already reserved'];
                 }
             } else {
-                $errors[] = 'Sorry we are not working at this time';
+                $custom_errors[] = ['message' => 'Sorry we are not working at this time'];
             }
 
         }
-        return $this->render('reservation_form.html.twig' ,['form' => $day->createView(),'errors' => $errors]);
+
+        $errors = $validator->validate($reservation);
+        return $this->render('reservation_form.html.twig' ,['form' => $day->createView(),'errors' => $errors, 'custom_errors' => $custom_errors]);
     }
 }

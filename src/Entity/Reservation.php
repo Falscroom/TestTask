@@ -2,9 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ReservationRepository")
@@ -19,11 +18,24 @@ class Reservation
     private $id;
 
     /**
+     *
+     * @Assert\NotBlank()
+     * @Assert\Length(min=4,max=32)
+     * @Assert\Regex(
+     *     pattern="/^[A-Za-zА-Яа-я]*$/",
+     *     message="Please use valid name"
+     * )
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
+     *
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/",
+     *     message="Please use valid telephone number"
+     * )
      * @ORM\Column(type="string", length=255)
      */
     private $number;

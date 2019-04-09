@@ -49,11 +49,14 @@
                             <label for="reservation_time">Time</label>
                         </div>
                     </div>
-                    {% for error in errors %}
-                        <div class="error">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
+                    <div class="error">
+                        {% for error in errors %}
+                            <p>{{ error.message }}</p>
+                        {% endfor %}
+                        {% for error in custom_errors %}
+                            <p>{{ error.message }}</p>
+                        {% endfor %}
+                    </div>
                     <div class="col s8 offset-s2 m8 offset-m2 l8 offset-l2">
                         {{ form_widget(form.reserve, { 'attr': {'class' : 'waves-effect waves-light btn-large amber darken-4'} }) }}
                     </div>
@@ -66,28 +69,5 @@
 
         {% block javascripts %}
             {{ parent() }}
-            <script>
-                $(document).ready(function(){
-                    $('.datepicker').datepicker({
-                        'autoClose' : true,
-                        'format' : 'yyyy/mm/dd'
-                    });
-                    $('select').formSelect();
-                    $('.timepicker').timepicker({
-                        'autoClose' : true,
-                        'twelveHour' : false
-                    });
-                    $('.timepicker').change(function () { //TODO 24 00
-                        let time = $(this).val().split(':');
-                        time[1] = Math.round(time[1] / 30) * 30;
-                        if(time[1] === 60) {
-                            time[0] = time[0] === 23 ? '00' : time[0] + 1;
-                            time[1] = 0;
-                        }
-                        $(this).val(
-                            time[0] + ':' + (time[1] === 0 ? '00' : time[1])
-                        );
-                    })
-                });
-            </script>
+            <script src="{{ asset('/js/reservation_form.js') }}"></script>
         {% endblock %}
