@@ -6,11 +6,7 @@
     {% endblock %}
 
     {% block body %}
-
     <div class="container">
-        <div class="logo">
-            <img src="{{ asset('/images/logo.svg') }}">
-        </div>
         <div class="form-container">
             <h1>Table Reservation</h1>
             <div class="row">
@@ -85,7 +81,7 @@
                         let time = $(this).val().split(':');
                         time[1] = Math.round(time[1] / 30) * 30;
                         if(time[1] === 60) {
-                            time[0]++;
+                            time[0] = time[0] === 23 ? '00' : time[0] + 1;
                             time[1] = 0;
                         }
                         $(this).val(

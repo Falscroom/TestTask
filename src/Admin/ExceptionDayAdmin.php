@@ -11,7 +11,6 @@ namespace App\Admin;
 
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
@@ -30,12 +29,6 @@ final class ExceptionDayAdmin extends AbstractAdmin
                 'required' => false
             ));
     }
-
-    /*    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
-        {
-            $datagridMapper->add('name');
-        }*/
-
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
@@ -45,17 +38,7 @@ final class ExceptionDayAdmin extends AbstractAdmin
             ->addIdentifier('end', null, array(
                 'label' => 'Time of the end' ))
             ->addIdentifier('isDayOff', null, array(
-                'label' => 'Is it day off?' ))
-/*            ->addIdentifier('end')->add('_action', null, [
-                'actions' => [
-                    'show' => [],
-                    'edit' => [],
-                    'delete' => [],
-                    'clone' => [
-                        'template' => 'admin/list__action_clone.html.twig',
-                    ]
-                ]
-            ])*/;
+                'label' => 'Is it day off?' ));
     }
 
     protected function configureRoutes(RouteCollection $collection)
@@ -76,6 +59,4 @@ final class ExceptionDayAdmin extends AbstractAdmin
 
         return $actions;
     }
-
-
 }

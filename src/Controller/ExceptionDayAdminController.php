@@ -19,6 +19,7 @@ class ExceptionDayAdminController extends CRUDController
 {
     public function createCalendarAction(Request $request)
     {
+        $show_success_message = false;
         $day = new ExceptionDayType();
         $day = $day->buildForm($this->createFormBuilder());
         $repository = $this->getDoctrine()->getRepository(ExceptionDay::class);
@@ -52,12 +53,13 @@ class ExceptionDayAdminController extends CRUDController
                 $exceptionDay->setAll($data['range_end'],$data['start'],$data['end'],$data['IsDayOff']);
             }
             $em->persist($exceptionDay);
-              $em->flush();
+            $em->flush();
+            $show_success_message = true;
 
         }
 
         return $this->renderWithExtraParams('admin/calendar.html.twig',[
-            'form' => $day->createView()
+            'form' => $day->createView(), 'show_success_message' => $show_success_message
         ]);
     }
 }

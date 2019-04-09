@@ -9,7 +9,13 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block logo %}
+            <div class="logo">
+                <img src="{{ asset('/images/logo.svg') }}">
+            </div>
+        {% endblock %}
+        {% block body %}
+        {% endblock %}
         {% block javascripts %}
             <script type="text/javascript" src="{{ asset('/jQuery/jQuery.js') }}"></script>
             <script type="text/javascript" src="{{ asset('/materialize/materialize.js') }}"></script>

@@ -5,16 +5,12 @@
  * Date: 04.04.2019
  * Time: 18:08
  */
-
-// src/Admin/CustomViewAdmin.php
 namespace App\Admin;
 
 use App\Entity\Desk;
-use App\Entity\TableType;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Form\Type\ModelType;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
