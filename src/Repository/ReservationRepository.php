@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Reservation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * @method Reservation|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,10 +36,14 @@ class ReservationRepository extends ServiceEntityRepository
     }
     public function findOneById($id): ?Reservation
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.id = :val')
-            ->setParameter('val', $id)
-            ->getQuery()
-            ->getResult();
+        try {
+            return $this->createQueryBuilder('r')
+                ->andWhere('r.id = :val')
+                ->setParameter('val', $id)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
     }
 }

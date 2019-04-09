@@ -48,7 +48,7 @@ class ReservationController  extends AbstractController
             $exception_day = $this->getDoctrine()->getRepository(ExceptionDay::class)->findOneByDate( $reservation->getDate()->format('Y-m-d') );
 
             $working_day = $exception_day ? $exception_day : $working_day;
-            
+
             if($reservation->getTime() >= $working_day->getStart() &&  $reservation->getEndTime() <= $working_day->getEnd() && (!$working_day->getIsDayOff())) {
                 if (count($already_reserved) === 0) {
                     $entityManager->flush();
